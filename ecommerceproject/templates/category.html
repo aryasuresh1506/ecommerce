@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to our store where you can buy different items...
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+{% if category %}
+        {{ category.name }} - ANYTHING store
+    {% else %}
+        See our New Collection -ANYTHING Store
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if category %}
+    <div>
+        <div class="row my_row_class">
+            <div class="mx-auto">
+                <p><a href="{% url 'shop:allProdCat' %}">Our Product Collections</a></p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<div class="mx-auto">
+    {% if category %}
+    <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}">
+</div>
+<br>
+<div>
+    <h1 class="text-center my_title">{{category.name}}</h1>
+    <p class="text-justify">{{category.description}}</p>
+</div>
+{% else %}
+<div>
+    <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="Our Products" style="width:1305px; height:500px;">
+</div>
+<br>
+<div>
+    <h4 class="text-center my_title">Our Products Collections</h4>
+    <p class="text-justify">Donec posuere ultrices facilisis. In at lacus vitae velit dapibus volutpat id at mauris. Cras ut massa vitae nulla vehicula imperdiet ut nec massa. Sed id diam tempus, dictum nulla quis, efficitur risus. Morbi nisl purus, bibendum sed euismod at, porta a nulla. In in maximus sapien.Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat."</p>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row mx-auto">
+        {% for products in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-4 col-md-4 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width:10rem;">
+                <a href="{{products.get_url}}"><img class="card-img-top my_image" src="{{products.image.url}}" alt="{{products.name}}" style="width:398px; height:380px;"></a>
+                <div class="card-body">
+                    <h4>{{products.name}}</h4>
+                    <p>{{products.price}}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+        <br>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
